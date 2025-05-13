@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include <Wire.h>
-#include <Servo.h>
+#include <ESP32Servo.h>
 #include <MS5837.h>  // Include the sensor library
 
 // Wi-Fi credentials for Access Point
@@ -11,13 +11,15 @@ const char* ap_password = "Robosharks";
 WebServer server(80);
 
 Servo buoyancyServo;
-const int servoPin = 18; // Change to actual servo control pin, I haven't decided on layout yet
+const int servoPin = 13; // Change to actual servo control pin, I haven't decided on layout yet
 
 // MS5837 sensor object
 MS5837 sensor;
 
 // Depth/Temp Variables
 float currentDepth = 0.0;
+float uncalibrated = 0.0;
+
 float currentTemperature = 0.0;
 
 // Target settings
@@ -29,7 +31,8 @@ String manualCommand = ""; // "inflate" or "deflate"
 void readDepthSensor() {
   sensor.read();
   currentTemperature = sensor.temperature(); // °C
-  currentDepth = sensor.depth(); // Meters (fresh water by default)
+  uncalibrated = sensor.depth(); // Meters (fresh water by default)
+  currentDepth = (uncalibrated-149.65)
 }
 
 // Adjust buoyancy automatically
