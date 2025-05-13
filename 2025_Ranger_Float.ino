@@ -19,8 +19,10 @@ MS5837 sensor;
 // Depth/Temp Variables
 float currentDepth = 0.0;
 float uncalibrated = 0.0;
-
+int depth[1200];
+int x = 0;
 float currentTemperature = 0.0;
+String depthList = "";
 
 // Target settings
 float targetDepth = 2.5; // meters
@@ -106,7 +108,7 @@ void handleRoot() {
 // Serve JSON sensor data
 void handleData() {
   String json = "{";
-  json += "\"depth\":" + String(currentDepth, 2) + ",";
+  json += "\"depth\":" + String(depthList) + ",";
   json += "\"temperature\":" + String(currentTemperature, 2);
   json += "}";
   server.send(200, "application/json", json);
@@ -162,7 +164,11 @@ void setup() {
 
 void loop() {
   readDepthSensor();
+  depth[x] = (currentDepth);
+  depthList.concat(currentDepth);
+  depthList.concat(" ");
+
   adjustBuoyancy();
   server.handleClient();
-  delay(500);
+  delay(1000);
 }
