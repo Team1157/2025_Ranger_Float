@@ -32,7 +32,7 @@ void readDepthSensor() {
   sensor.read();
   currentTemperature = sensor.temperature(); // °C
   uncalibrated = sensor.depth(); // Meters (fresh water by default)
-  currentDepth = (uncalibrated-149.65)
+  currentDepth = (uncalibrated-149.65);
 }
 
 // Adjust buoyancy automatically
